@@ -1,4 +1,4 @@
-package com.noha.moviesadvanced.util
+package com.noha.moviesadvanced.presentation.util
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

@@ -1,4 +1,4 @@
-package com.noha.moviesadvanced.ui
+package com.noha.moviesadvanced.presentation.ui
 
 import android.os.Bundle
 import android.view.View
@@ -8,13 +8,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.noha.moviesadvanced.R
-import com.noha.moviesadvanced.adapter.MovieAdapter
+import com.noha.moviesadvanced.presentation.adapter.MovieAdapter
 import com.noha.moviesadvanced.databinding.ActivityMainBinding
 import com.noha.moviesadvanced.databinding.ItemMovieBinding
-import com.noha.moviesadvanced.model.Movie
-import com.noha.moviesadvanced.model.getDummyListOfMovies
-import com.noha.moviesadvanced.util.CenterZoomLayoutManager
-import com.noha.moviesadvanced.util.loadImage
+import com.noha.moviesadvanced.core.data.models.Movie
+import com.noha.moviesadvanced.core.data.models.getDummyListOfMovies
+import com.noha.moviesadvanced.presentation.util.CenterZoomLayoutManager
+import com.noha.moviesadvanced.presentation.util.loadImage
 
 
 /* ToDo: FUNCTIONS SHOULD DO ONE THING. THEY SHOULD DO IT WELL. THEY SHOULD DO IT ONLY.*/
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
                     val visibleView: View? = layoutManager.findViewByPosition(visiblePosition)
 
                     visibleView?.let {
-                        onFocusedItemChange(getDummyListOfMovies()[visiblePosition], it)
+                        onFocusedItemChange(com.noha.moviesadvanced.core.data.models.getDummyListOfMovies()[visiblePosition], it)
                     }
                 }
             }
@@ -61,11 +61,11 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     }
 
     private fun bindMovieList() {
-        adapter = MovieAdapter(getDummyListOfMovies(), this)
+        adapter = MovieAdapter(com.noha.moviesadvanced.core.data.models.getDummyListOfMovies(), this)
         mainBinding.recyclerView.adapter = adapter
     }
 
-    override fun onItemSelected(position: Int, item: Movie, binding: ItemMovieBinding) {
+    override fun onItemSelected(position: Int, item: com.noha.moviesadvanced.core.data.models.Movie, binding: ItemMovieBinding) {
         //Hide last selected item details
         lastSelectedItemBinding?.let { displayMovieDetails(it, false) }
 
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
             displayMovieDetails(binding, true)
     }
 
-    private fun onFocusedItemChange(movie: Movie, view: View) {
+    private fun onFocusedItemChange(movie: com.noha.moviesadvanced.core.data.models.Movie, view: View) {
         //change card boarder color
         changeTransparentOfFocusedItem(view)
 
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
         lastVisibleItemWhiteBoarder = whiteImageView
     }
 
-    private fun changeBackgroundImage(movie: Movie) {
+    private fun changeBackgroundImage(movie: com.noha.moviesadvanced.core.data.models.Movie) {
         loadImage(mainBinding.backgroundImageView, movie.poster)
     }
 

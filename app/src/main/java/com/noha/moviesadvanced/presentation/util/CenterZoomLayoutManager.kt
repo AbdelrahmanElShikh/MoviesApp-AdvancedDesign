@@ -1,4 +1,4 @@
-package com.noha.moviesadvanced.util
+package com.noha.moviesadvanced.presentation.util
 
 import android.content.Context
 import android.view.View

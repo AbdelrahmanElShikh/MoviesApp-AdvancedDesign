@@ -1,4 +1,4 @@
-package com.noha.moviesadvanced.model
+package com.noha.moviesadvanced.core.data.models
 
 class Actor(
     val name: String,
