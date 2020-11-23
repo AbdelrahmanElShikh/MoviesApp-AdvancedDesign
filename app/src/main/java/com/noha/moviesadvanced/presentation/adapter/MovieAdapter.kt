@@ -9,7 +9,7 @@ import com.noha.moviesadvanced.core.data.models.Movie
 
 
 class MovieAdapter(
-    private val list: List<com.noha.moviesadvanced.core.data.models.Movie>,
+    private val list: List<Movie>,
     private val interaction: Interaction? = null
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
@@ -40,12 +40,12 @@ class MovieAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(item: com.noha.moviesadvanced.core.data.models.Movie) = with(itemView) {
+        fun bind(item: Movie) = with(itemView) {
             binding.movie = item
             binding.executePendingBindings()
 
             //Bind Actors list and enable nested scroll
-            binding.detailsView.actorsRecyclerView.adapter = ActorsAdapter(item.actors)
+            //binding.detailsView.actorsRecyclerView.adapter = ActorsAdapter(item.actors)
             binding.detailsView.actorsRecyclerView.addOnItemTouchListener(object :
                 RecyclerView.OnItemTouchListener {
                 override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
@@ -56,10 +56,11 @@ class MovieAdapter(
                 }
 
                 override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-
+                    //do nothing
                 }
 
                 override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                    //do nothing
                 }
 
             })
@@ -73,7 +74,7 @@ class MovieAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: com.noha.moviesadvanced.core.data.models.Movie, binding: ItemMovieBinding)
+        fun onItemSelected(position: Int, item: Movie, binding: ItemMovieBinding)
     }
 }
 

@@ -8,4 +8,13 @@
     <string name="introduction">Introduction</string>
     <string name="director">Director / %s</string>
     <string name="background">background</string>
+
+<!--    Error Handles SnackBar text-->
+
+    <string name="ok_snackbar">OK</string>
+    <string name="no_internet_connection_msg">No internet Connection. Make Sure Your phone is connected to the internet to continue</string>
+    <string name="general_error_msg">An unknown error occurred. Please try again later.</string>
+    <string name="retry_button_title">Retry</string>
+    <string name="error_connection_timeout">Request timed out. Make sure your internet connection working properly and try again later.</string>
+
 </resources>

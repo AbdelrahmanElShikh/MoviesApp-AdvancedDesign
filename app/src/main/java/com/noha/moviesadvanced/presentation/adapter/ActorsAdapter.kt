@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.noha.moviesadvanced.databinding.ItemActorBinding
 import com.noha.moviesadvanced.core.data.models.Actor
 
-class ActorsAdapter(private val list: List<com.noha.moviesadvanced.core.data.models.Actor>) :
+class ActorsAdapter(private val list: List<Actor>) :
     RecyclerView.Adapter<ActorsAdapter.ActorViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
@@ -30,10 +30,10 @@ class ActorsAdapter(private val list: List<com.noha.moviesadvanced.core.data.mod
 
     class ActorViewHolder
     constructor(
-        private val binding: ItemActorBinding,
+        private val binding: ItemActorBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: com.noha.moviesadvanced.core.data.models.Actor) = with(itemView) {
+        fun bind(item: Actor) = with(itemView) {
             binding.actor = item
             binding.executePendingBindings()
         }
