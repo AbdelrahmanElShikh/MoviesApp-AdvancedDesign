@@ -3,6 +3,7 @@ package com.noha.moviesadvanced.presentation.adapter
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.noha.moviesadvanced.databinding.ItemMovieBinding
 import com.noha.moviesadvanced.core.data.models.Movie
@@ -43,6 +44,8 @@ class MovieAdapter(
         fun bind(item: Movie) = with(itemView) {
             binding.movie = item
             binding.executePendingBindings()
+            val params = binding.posterGuideline.layoutParams as ConstraintLayout.LayoutParams
+            params.guidePercent = 0.6f
 
             //Bind Actors list and enable nested scroll
             //binding.detailsView.actorsRecyclerView.adapter = ActorsAdapter(item.actors)

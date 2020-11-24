@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     private lateinit var adapter: MovieAdapter
     private var lastVisibleItemWhiteBoarder: ConstraintLayout? = null
     private var lastSelectedItemBinding: ItemMovieBinding? = null
+    private var lastSelectedItemPosition: Int? = null
     private lateinit var  viewMode : MoviesViewModel
     private lateinit var movies : List<Movie>
     private val domainErrorChain = DomainErrorChain.BUILDER().buildWithDefaultChainLinks()
@@ -156,16 +157,15 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     }
 
     override fun onItemSelected(position: Int, selectedMovie:Movie, binding: ItemMovieBinding) {
-        //binding.detailsView.actorsRecyclerView.adapter = ActorsAdapter(item.actors)
-
         viewMode.getMovieActors(selectedMovie.id)
         viewMode.actors.observe(this, handleActorsObserver(binding = binding , selectedMovie = selectedMovie))
         //Hide last selected item details
         lastSelectedItemBinding?.let { displayMovieDetails(it, false) }
-
         //Display selected item details
-        if (lastSelectedItemBinding != binding)
+        if (lastSelectedItemPosition != null)
             displayMovieDetails(binding, true)
+
+        lastSelectedItemPosition = position
 
     }
 
