@@ -2,6 +2,7 @@ package com.noha.moviesadvanced.framework.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.noha.moviesadvanced.BuildConfig
 import com.noha.moviesadvanced.core.data.ApiService
 import dagger.Module
 import dagger.Provides
@@ -41,7 +42,7 @@ class RemoteModule {
     @Provides
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
     }

@@ -74,7 +74,7 @@ class MovieAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: Movie, binding: ItemMovieBinding)
+        fun onItemSelected(position: Int, selectedMovie: Movie, binding: ItemMovieBinding)
     }
 }
 

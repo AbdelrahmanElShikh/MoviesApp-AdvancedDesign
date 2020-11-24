@@ -3,6 +3,7 @@ package com.noha.moviesadvanced.presentation.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,9 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.noha.moviesadvanced.BuildConfig
 import com.noha.moviesadvanced.R
+import com.noha.moviesadvanced.core.data.models.ActorResponseWrapper
 import com.noha.moviesadvanced.core.data.models.Movie
+import com.noha.moviesadvanced.core.data.models.MoviesResponseWrapper
 import com.noha.moviesadvanced.core.resource.PresentationResource
 import com.noha.moviesadvanced.presentation.adapter.MovieAdapter
 import com.noha.moviesadvanced.databinding.ActivityMainBinding
@@ -39,7 +41,72 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     private lateinit var  viewMode : MoviesViewModel
     private lateinit var movies : List<Movie>
     private val domainErrorChain = DomainErrorChain.BUILDER().buildWithDefaultChainLinks()
+    private val moviesObserver : Observer<PresentationResource<MoviesResponseWrapper>> = Observer { moviesResponse ->
+        when (moviesResponse.status) {
+            PresentationResource.Status.LOADING -> {
+                handleProgressBar(progressBar =  mainBinding.progressBar,show = true)
+            }
+            PresentationResource.Status.SUCCESS -> {
+                movies = moviesResponse.data!!.results
+                bindMovieList(movies)
+                handleProgressBar(progressBar =  mainBinding.progressBar,show = false)
 
+            }
+            PresentationResource.Status.API_ERROR -> {
+                Log.e(TAG, "API ERROR: "+moviesResponse.apiError!!.apiErrorMessage )
+                Toast.makeText(this, moviesResponse.apiError!!.apiErrorMessage, Toast.LENGTH_SHORT)
+                    .show()
+                handleProgressBar(progressBar = mainBinding.progressBar, show = false)
+            }
+            PresentationResource.Status.DOMAIN_ERROR -> {
+                domainErrorChain.execute(moviesResponse.throwable,this,object :RetryHandler{
+                    override fun onRetry() {
+                        viewMode.getMovies()
+                    }
+                })
+                handleProgressBar(progressBar =  mainBinding.progressBar,show = false)
+            }
+        }
+
+    }
+
+    private fun handleActorsObserver(binding: ItemMovieBinding,selectedMovie:Movie) : Observer<PresentationResource<ActorResponseWrapper>>{
+        return Observer { actorsResponse->
+
+            when (actorsResponse.status) {
+                PresentationResource.Status.LOADING ->{
+                 handleProgressBar(progressBar = binding.detailsView.progressBar,show = true)
+                    binding.detailsView.actorsRecyclerView.visibility = View.INVISIBLE
+            }
+
+                PresentationResource.Status.SUCCESS -> {
+                    binding.detailsView.actorsRecyclerView.adapter =
+                        ActorsAdapter(actorsResponse.data!!.actors)
+                    handleProgressBar(progressBar = binding.detailsView.progressBar,show = false)
+                    binding.detailsView.actorsRecyclerView.visibility = View.VISIBLE
+                }
+                PresentationResource.Status.DOMAIN_ERROR -> {
+                    domainErrorChain.execute(
+                        actorsResponse.throwable,
+                        this,
+                        object : RetryHandler {
+                            override fun onRetry() {
+                                viewMode.getMovieActors(selectedMovie.id)
+                            }
+                        })
+                    handleProgressBar(progressBar = binding.detailsView.progressBar,show = false)
+                }
+                PresentationResource.Status.API_ERROR -> {
+                    Toast.makeText(
+                        this,
+                        actorsResponse.apiError!!.apiErrorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    handleProgressBar(progressBar = binding.detailsView.progressBar,show = false)
+                }
+
+            } }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,77 +144,22 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     }
 
     private fun observeMovies() {
-        viewMode.movies.observe(this, Observer { moviesResponse ->
-            when (moviesResponse.status) {
-                PresentationResource.Status.LOADING -> {mainBinding.progressBar.visibility = View.VISIBLE}
-                PresentationResource.Status.SUCCESS -> {
-                    movies = moviesResponse.data!!.results
-                    bindMovieList(movies)
-                    hideProgressBar()
-
-                }
-                PresentationResource.Status.API_ERROR -> {
-                    Toast.makeText(this,moviesResponse.apiError!!.status_message,Toast.LENGTH_SHORT).show()
-                    hideProgressBar()
-                }
-                PresentationResource.Status.DOMAIN_ERROR -> {
-                    domainErrorChain.execute(moviesResponse.throwable,this,object :RetryHandler{
-                        override fun onRetry() {
-                            viewMode.getMovies()
-                        }
-
-                    })
-                    hideProgressBar()
-                }
-            }
-
-        })
+        viewMode.movies.observe(this,moviesObserver )
     }
 
-    private fun hideProgressBar(){
-        mainBinding.progressBar.visibility = View.GONE
+    private fun handleProgressBar(progressBar : ProgressBar,show: Boolean){
+        progressBar.visibility = if(show) View.VISIBLE else View.GONE
     }
     private fun bindMovieList(movies : List<Movie>) {
         adapter = MovieAdapter(movies ,this)
         mainBinding.recyclerView.adapter = adapter
     }
 
-    override fun onItemSelected(position: Int, item:Movie, binding: ItemMovieBinding) {
+    override fun onItemSelected(position: Int, selectedMovie:Movie, binding: ItemMovieBinding) {
         //binding.detailsView.actorsRecyclerView.adapter = ActorsAdapter(item.actors)
 
-        viewMode.getMovieActors(item.id)
-        viewMode.actors.observe(this, Observer { actorsResponse->
-            run {
-                when (actorsResponse.status) {
-                    PresentationResource.Status.LOADING -> binding.progressBar.visibility =
-                        View.VISIBLE
-                    PresentationResource.Status.SUCCESS -> {
-                        binding.detailsView.actorsRecyclerView.adapter =
-                            ActorsAdapter(actorsResponse.data!!.actors)
-                        binding.progressBar.visibility=View.GONE
-                    }
-                    PresentationResource.Status.DOMAIN_ERROR -> {
-                        domainErrorChain.execute(
-                            actorsResponse.throwable,
-                            this,
-                            object : RetryHandler {
-                                override fun onRetry() {
-                                    viewMode.getMovieActors(item.id)
-                                }
-                            })
-                        binding.progressBar.visibility=View.GONE
-                    }
-                    PresentationResource.Status.API_ERROR -> {
-                        Toast.makeText(
-                            this,
-                            actorsResponse.apiError!!.status_message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        binding.progressBar.visibility=View.GONE
-                    }
-                }
-            }
-        })
+        viewMode.getMovieActors(selectedMovie.id)
+        viewMode.actors.observe(this, handleActorsObserver(binding = binding , selectedMovie = selectedMovie))
         //Hide last selected item details
         lastSelectedItemBinding?.let { displayMovieDetails(it, false) }
 

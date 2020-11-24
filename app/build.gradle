@@ -16,6 +16,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_KEY", "\"87a784a1f4dd0f75c86b2e2b95baa49b\""
+        buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+        buildConfigField "String", "IMAGE_BASE_URL", "\"https://image.tmdb.org/t/p/w500\""
+
         buildConfigField "String", "LANGUAGE", "\""+Locale.getDefault().toLanguageTag().toString()+"\""
 
     }
@@ -93,6 +96,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 
 }
