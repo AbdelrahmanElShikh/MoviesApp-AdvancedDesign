@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/647580364/Workspaces.iml" filepath="$PROJECT_DIR$/.idea/modules/647580364/Workspaces.iml" group="Workspaces" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/authmanager.iml" filepath="$PROJECT_DIR$/.idea/modules/authmanager.iml" group="Workspaces/authmanager" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-74486327/cryptomanager.iml" filepath="$PROJECT_DIR$/.idea/modules/-74486327/cryptomanager.iml" group="Workspaces/cryptomanager" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1232677619/data.iml" filepath="$PROJECT_DIR$/.idea/modules/-1232677619/data.iml" group="Workspaces/data" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/820505959/domain.iml" filepath="$PROJECT_DIR$/.idea/modules/820505959/domain.iml" group="Workspaces/domain" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1321058181/inactivitywatcher.iml" filepath="$PROJECT_DIR$/.idea/modules/1321058181/inactivitywatcher.iml" group="Workspaces/inactivitywatcher" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1345720680/otp.iml" filepath="$PROJECT_DIR$/.idea/modules/1345720680/otp.iml" group="Workspaces/otp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/648335741/presentation.iml" filepath="$PROJECT_DIR$/.idea/modules/648335741/presentation.iml" group="Workspaces/presentation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-729857528/safetynet.iml" filepath="$PROJECT_DIR$/.idea/modules/-729857528/safetynet.iml" group="Workspaces/safetynet" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-926420809/ui.iml" filepath="$PROJECT_DIR$/.idea/modules/-926420809/ui.iml" group="Workspaces/ui" />
+    </modules>
+  </component>
+</project>

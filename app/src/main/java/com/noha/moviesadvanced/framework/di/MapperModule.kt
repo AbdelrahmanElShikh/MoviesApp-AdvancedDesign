@@ -1,5 +1,6 @@
 package com.noha.moviesadvanced.framework.di
 
+import com.aib.mobile.banking.authmanager.remote.model.AuthRemote
 import com.noha.moviesadvanced.core.data.models.ActorResponseWrapper
 import com.noha.moviesadvanced.core.data.models.MoviesResponseWrapper
 import com.noha.moviesadvanced.core.mapper.Mapper
@@ -21,6 +22,11 @@ class MapperModule{
 
     @Provides
     fun movieActorMapper(): RemoteResourceMapper<ActorResponseWrapper> {
+        return RemoteResourceMapper()
+    }
+
+    @Provides
+    fun tokenMapper(): RemoteResourceMapper<AuthRemote> {
         return RemoteResourceMapper()
     }
 

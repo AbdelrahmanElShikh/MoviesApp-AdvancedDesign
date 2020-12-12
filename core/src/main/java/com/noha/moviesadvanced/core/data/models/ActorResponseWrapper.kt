@@ -7,6 +7,5 @@ import com.google.gson.annotations.SerializedName
  * @author : Abdel-Rahman El-Shikh on Mon , 11/23/2020
  */
 data class ActorResponseWrapper(
-    @SerializedName("cast") @Expose
-    val actors: List<Actor>
+    @SerializedName("cast") @Expose val actors: List<Actor>
 )

@@ -1,3 +1,5 @@
+include ':cryptomanager'
+include ':authmanager'
 include ':core'
 include ':app'
 rootProject.name = "Movies ( Advanced )"

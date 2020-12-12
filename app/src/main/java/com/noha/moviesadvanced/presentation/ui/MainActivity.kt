@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
         })
 
         observeMovies()
+        viewMode.login()
     }
 
     private fun observeMovies() {
