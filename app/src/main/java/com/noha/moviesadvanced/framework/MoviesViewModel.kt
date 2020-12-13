@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.aib.mobile.banking.authmanager.di.AuthComponent
 import com.aib.mobile.banking.authmanager.di.AuthComponentWrapper
+import com.aib.mobile.banking.authmanager.model.Auth
 import com.aib.mobile.banking.authmanager.remote.model.AuthRemote
 import com.noha.moviesadvanced.BuildConfig
 import com.noha.moviesadvanced.core.data.models.ActorResponseWrapper
@@ -60,6 +60,11 @@ class MoviesViewModel(app: Application) : AndroidViewModel(app) {
     val token: LiveData<PresentationResource<AuthRemote>>
         get() = _token
 
+    private val _auth = MutableLiveData<Auth>()
+    val auth: LiveData<Auth>
+        get() = _auth
+
+
     fun getMovies() {
         viewModelScope.launch {
             _movies.value = PresentationResource.loading()
@@ -97,7 +102,7 @@ class MoviesViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun login(){
+    fun login() {
         _token.value = PresentationResource.loading()
         GlobalScope.launch(Dispatchers.IO) {
             try {
@@ -105,14 +110,21 @@ class MoviesViewModel(app: Application) : AndroidViewModel(app) {
                     .onEach {
                         _token.postValue(it)
                     }
-                    .catch { _token.postValue( PresentationResource.domainError(it))  }
+                    .catch { _token.postValue(PresentationResource.domainError(it)) }
 
                     .launchIn(CoroutineScope(Dispatchers.IO))
-            }catch (e :Exception){
+            } catch (e: Exception) {
                 _token.value = PresentationResource.domainError(e)
 
             }
 
+        }
+    }
+
+    fun getUserAuth() {
+        viewModelScope.launch {
+            loginUseCase.getAuth().onEach { _auth.value = it}
+                .launchIn(viewModelScope)
         }
     }
 

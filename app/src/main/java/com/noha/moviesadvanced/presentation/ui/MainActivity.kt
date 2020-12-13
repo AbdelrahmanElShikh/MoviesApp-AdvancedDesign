@@ -12,6 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.aib.mobile.banking.authmanager.remote.model.AuthRemote
+import com.google.android.material.snackbar.Snackbar
 import com.noha.moviesadvanced.R
 import com.noha.moviesadvanced.core.data.models.ActorResponseWrapper
 import com.noha.moviesadvanced.core.data.models.Movie
@@ -26,6 +28,8 @@ import com.noha.moviesadvanced.presentation.util.CenterZoomLayoutManager
 import com.noha.moviesadvanced.presentation.util.errorhandler.RetryHandler
 import com.noha.moviesadvanced.presentation.util.errorhandler.domain.chains.DomainErrorChain
 import com.noha.moviesadvanced.presentation.util.loadImage
+import com.noha.moviesadvanced.presentation.util.snackbars.OkSnackBar
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 /* ToDo: FUNCTIONS SHOULD DO ONE THING. THEY SHOULD DO IT WELL. THEY SHOULD DO IT ONLY.*/
@@ -42,6 +46,19 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
     private lateinit var  viewMode : MoviesViewModel
     private lateinit var movies : List<Movie>
     private val domainErrorChain = DomainErrorChain.BUILDER().buildWithDefaultChainLinks()
+
+    private val tokenObserver : Observer<PresentationResource<AuthRemote>> = Observer { token->
+        when(token.status){
+            PresentationResource.Status.LOADING -> Log.e(TAG, "LOADING" )
+            PresentationResource.Status.SUCCESS -> Log.e(TAG, "SUCCESS: ${token.data!!.accessToken}" )
+            PresentationResource.Status.API_ERROR -> Toast.makeText(
+                this,
+                token.apiError!!.apiErrorMessage,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
     private val moviesObserver : Observer<PresentationResource<MoviesResponseWrapper>> = Observer { moviesResponse ->
         when (moviesResponse.status) {
             PresentationResource.Status.LOADING -> {
@@ -143,6 +160,20 @@ class MainActivity : AppCompatActivity(), MovieAdapter.Interaction {
 
         observeMovies()
         viewMode.login()
+        observeLoginToken()
+        viewMode.getUserAuth()
+        observeUserAuth()
+    }
+
+    private fun observeUserAuth() {
+        viewMode.auth.observe(this, Observer {
+            OkSnackBar.make(progressBar,it.accessToken,Snackbar.LENGTH_INDEFINITE).show()
+            Log.e(TAG, "observeUserAuth: ${it.accessToken}" )
+        })
+    }
+
+    private fun observeLoginToken() {
+        viewMode.token.observe(this,tokenObserver)
     }
 
     private fun observeMovies() {
